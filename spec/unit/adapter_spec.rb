@@ -17,45 +17,45 @@ RSpec.describe Entermedia::Adapter do
     media_stubs
   end
 
-  # describe '#configure' do
-    # it 'should take in domain parameter' do
-      # Entermedia::Adapter.configure({
-        # domain: dom
-      # })
-      # options = Entermedia::Adapter.class_variable_get(:@@options)
-      # expect(options[:domain]).to eq(dom)
-    # end
+  describe '#configure' do
+    it 'should take in domain parameter' do
+      Entermedia::Adapter.configure({
+        domain: dom
+      })
+      options = Entermedia::Adapter.class_variable_get(:@@options)
+      expect(options[:domain]).to eq(dom)
+    end
 
-    # it 'should not merge options' do
-      # key = 'firstKey'
-      # Entermedia::Adapter.configure({
-        # entermediaKey: key
-      # })
-      # options = Entermedia::Adapter.class_variable_get(:@@options)
-      # expect(options[:domain]).to be_nil
-      # expect(options[:entermediaKey]).to eq(key)
-    # end
+    it 'should not merge options' do
+      key = 'firstKey'
+      Entermedia::Adapter.configure({
+        entermediaKey: key
+      })
+      options = Entermedia::Adapter.class_variable_get(:@@options)
+      expect(options[:domain]).to be_nil
+      expect(options[:entermediaKey]).to eq(key)
+    end
 
-    # it 'should overwrite same options' do
-      # new_dom = 'app2.com'
-      # Entermedia::Adapter.configure({
-        # domain: new_dom
-      # })
-      # options = Entermedia::Adapter.class_variable_get(:@@options)
-      # expect(options[:domain]).to eq(new_dom)
-    # end
-  # end
+    it 'should overwrite same options' do
+      new_dom = 'app2.com'
+      Entermedia::Adapter.configure({
+        domain: new_dom
+      })
+      options = Entermedia::Adapter.class_variable_get(:@@options)
+      expect(options[:domain]).to eq(new_dom)
+    end
+  end
 
-  # describe '#domain' do
-    # it 'should return the domain that is set' do
-      # dom = 'app1.com'
-      # Entermedia::Adapter.class_variable_set(:@@options, {
-        # domain: dom
-      # })
-      # result = Entermedia::Adapter.domain
-      # expect(result).to eq(dom)
-    # end
-  # end
+  describe '#domain' do
+    it 'should return the domain that is set' do
+      new_dom = 'app1.com'
+      Entermedia::Adapter.class_variable_set(:@@options, {
+        domain: new_dom
+      })
+      result = Entermedia::Adapter.domain
+      expect(result).to eq(new_dom)
+    end
+  end
 
   describe '#send_request' do
     it 'should throw an error if no key is provided' do
