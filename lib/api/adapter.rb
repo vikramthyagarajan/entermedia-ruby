@@ -1,26 +1,35 @@
 module Entermedia
+  require 'rest-client'
   class Adapter
-    # options = {
-    #   entermediaKey: String
-    #   domain: String
-    # }
+    @@options = {}
     def self.configure(options)
       @@options = options
     end
+
     def self.send_request(method, path, body = {}, options = {})
-      domain = @@options[:domain]
-      entermediaKey = @@options[:entermediaKey]
+      if !@@options[:domain].nil?
+        domain = @@options[:domain]
+      else
+        raise ArgumentError, 'domain must be configured'
+      end
+      if !@@options[:entermediaKey].nil?
+        entermediaKey = @@options[:entermediaKey]
+      else
+        raise ArgumentError, 'entermediaKey must be configured'
+      end
 
       cookies = {'entermedia.key': entermediaKey}
       response = {}
       begin
         response = RestClient::Request.execute(method: method.to_sym, url: domain + path, payload: body, headers: options, cookies: cookies)
         response = JSON::parse(response.body)
+      rescue JSON::ParserError
+        raise JSON::ParserError, response
+      rescue RestClient::Exceptions::Timeout
+        response = RestClient::Request.execute(method: method.to_sym, url: domain + path, payload: body, headers: options, cookies: cookies)
+        response = JSON::parse(response.body)
       rescue => error
-        p 'error during request'
-        p error.message
-        p error.response.to_s
-        return error
+        raise error
       end
       response
     end
