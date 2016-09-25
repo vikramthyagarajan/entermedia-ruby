@@ -4,7 +4,8 @@ module Entermedia
   class Asset < Collection
     @module_name = 'asset'
 
-    # Class Functions
+    # Runs a search query on the media library, based on the json query argument passed
+    # Returns the results field of the POST call, which is an array of assets found for that query
     def self.search(query)
       method = 'search'
       body = {
@@ -15,9 +16,11 @@ module Entermedia
       response['results'] rescue []
     end
 
+    # Uploads a file with the provided metadata on the media server
+    # Params:
+    # +assetData+: (Hash) : The metadata of the file uploaded
+    # +assetFile+: (File) : The file to be uploaded as the asset
     def self.createAsset(assetData, assetFile)
-      p 'creating'
-      p @module_name
       method = 'create'
       body = {
         jsonrequest: assetData.to_json,
@@ -29,6 +32,10 @@ module Entermedia
       response rescue {}
     end
 
+    # Updates the asset metadata of a given assetId
+    # Params:
+    # +assetId+: (String) : The id of the asset to be updated
+    # +assetData+: (Hash) : The new asset metadata that needs to be set
     def self.updateMetaData(assetId, assetData)
       method = 'data/' + assetId
       body = {
@@ -39,6 +46,9 @@ module Entermedia
       response rescue {}
     end
 
+    # Finds assets whose name starts contains the given parameter. Returns an array of type Asset
+    # Params:
+    # +name+: (String) : The name to be searched
     def self.find_by_name(name)
       assets = self.search({
         terms: [
@@ -63,7 +73,6 @@ module Entermedia
     end
 
     def initialize(assetData, assetFile = nil, sourcePath = 'QuoDeck/uncategorized')
-      p 'inittting'
       @assetData = assetData
       # @assetData[:sourcePath] = sourcePath
       @assetFile = assetFile
